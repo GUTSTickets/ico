@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "rlp": "^2.0.0",
+    "sha3": "^1.2.0",
+    "vanity-eth": "^1.0.4",
+    "zeppelin-solidity": "^1.2.0"
+  }
+}
