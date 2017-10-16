@@ -18,12 +18,7 @@
  - In contracts/token_market_net there are only token_market_net contracts.
  - In contracts/gnosis the MultiSigWallet contract.
  - In node_modules/zeppelin-solidity/contracts OpenZeppelin contracts.
- - The Get.... contracts are the ones that i think we ll need. I try to reuse as much as possible.
-
-For Stavros testrpc (cloning kovan): (In start_testrpc the network-id has to match the network_id in truffle.js)
-```
-./start_testrpc 0xea8256c0ed7005af3557878957e05bbfd9ceb9950f3cd73343b66bc7be377175 0xa2d826dd37ca69224911602975fd88c090f75f481a1ed748513e7e7fadb844bc 0xe50b87fc07f4948908085f92c2ac13f568d9c9842871e509492b0ff68177e137
-```
+ - The Get.... contracts are the ones that we ll need
 
 For parity again
 
