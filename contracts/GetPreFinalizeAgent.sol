@@ -29,7 +29,7 @@ contract GetPreFinalizeAgent is FinalizeAgent, Ownable {
     }
 
     function finalizeCrowdsale() {
-        if(msg.sender != address(crowdsale)) {
+        if(msg.sender != address(preCrowdsale)) {
             revert();
         }
 

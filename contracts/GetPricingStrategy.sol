@@ -27,7 +27,7 @@ contract GetPricingStrategy is EthTranchePricing {
     }
 
     // needed to update the correct tier in whitelist
-    function getCurrentTrancheIndex(uint weiRaised) private constant returns (uint) {
+    function getCurrentTrancheIndex(uint weiRaised) public constant returns (uint) {
         uint i;
 
         for(i=0; i < tranches.length; i++) {

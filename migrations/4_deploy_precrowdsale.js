@@ -32,11 +32,11 @@ module.exports = function(deployer) {
         return GetPreCrowdsale.deployed();
     }).then((precrowdsale) => {
         return precrowdsale.setFinalizeAgent(
-            GetPreFinalizeAgent.address, {from: web3.eth.accounts[0]});
+            GetPreFinalizeAgent.address);
     }).then(() => {
         return GetToken.deployed();
     }).then((token) => {
-        return token.setMintAgent(GetPreCrowdsale.address, true, {from: web3.eth.accounts[0]});
+        return token.setMintAgent(GetPreCrowdsale.address, true);
     }).then(() => {
         return GetWhitelist.deployed();
     }).then((whitelist) => {

@@ -11,7 +11,6 @@ module.exports = {
                 id: new Date().getTime()
             }, (err, result) => {
                 if(err){ return reject(err) }
-                console.log(result)
                 return resolve(result)
             });
         })
@@ -19,5 +18,9 @@ module.exports = {
 
     now: function() {
         return web3.eth.getBlock('latest').timestamp;
+    },
+    
+    balanceOf: function(address) {
+        return web3.eth.getBalance(address);
     }
 }

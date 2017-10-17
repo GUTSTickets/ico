@@ -52,11 +52,12 @@ contract GetFinalizeAgent is FinalizeAgent {
             revert();
         }
 
-        // How many % of tokens the founders and others get
         uint tokensSold = crowdsale.tokensSold();
         uint decimals = token.decimals();
 
+        // maximum digits here (10 + 18 + 12)
         token.mint(userGrowthMultisig, tokensSold.times(73170731707) / 100000000000);
+        
         token.mint(stabilityMultisig, 12600000 * (10**decimals));
         token.mint(bountyMultisig, 1800000 * (10**decimals));
 

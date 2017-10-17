@@ -7,27 +7,27 @@ import './GetWhitelist.sol';
 contract GetCrowdsale is MintedTokenCappedCrowdsale {
 
     uint public lockTime;
-    address presale;
+    FinalizeAgent presaleFinalizeAgent;
 
     event PresaleUpdated(uint weiAmount, uint tokenAmount);
 
     function GetCrowdsale(
-        uint _lockTime, address _presale,
+        uint _lockTime, FinalizeAgent _presaleFinalizeAgent,
         address _token, PricingStrategy _pricingStrategy, address _multisigWallet,
         uint _start, uint _end, uint _minimumFundingGoal, uint _maximumSellableTokens)
 
         MintedTokenCappedCrowdsale(_token, _pricingStrategy, _multisigWallet,
             _start, _end, _minimumFundingGoal, _maximumSellableTokens)
     {
-        require(_presale != 0x0);
+        require(_presaleFinalizeAgent.isSane());
         require(_lockTime > 0);
         lockTime = _lockTime;
-        presale = _presale;
+        presaleFinalizeAgent = _presaleFinalizeAgent;
     }
 
     function logPresaleResults(uint tokenAmount, uint weiAmount) returns (bool) {
 
-        require(msg.sender == presale);
+        require(msg.sender == address(presaleFinalizeAgent));
         weiRaised = weiRaised.plus(weiAmount);
         tokensSold = tokensSold.plus(tokenAmount);
         presaleWeiRaised = presaleWeiRaised.plus(weiAmount);
