@@ -61,6 +61,7 @@ contract GetCrowdsale is MintedTokenCappedCrowdsale {
         revert();
     }
 
+    // added this here because it was not visible by preallocate
     function assignTokens(address receiver, uint tokenAmount) private {
         MintableToken mintableToken = MintableToken(token);
         mintableToken.mint(receiver, tokenAmount);
@@ -68,7 +69,7 @@ contract GetCrowdsale is MintedTokenCappedCrowdsale {
 
 
     function finalize() public inState(State.Success) onlyOwner stopInEmergency {
-        assert(now > endsAt + lockTime);
+        require(now > endsAt + lockTime);
         super.finalize();
     }
 

@@ -20,10 +20,6 @@
  - In node_modules/zeppelin-solidity/contracts OpenZeppelin contracts.
  - The Get.... contracts are the ones that we ll need
 
-For parity again
-
-`parity --chain kovan`
-
 Note that in truffle.js network_id 42 is mandatory for kovan.
 
 The contracts can be imported to the parity UI by moving address_book.json to ~/.local/share/io.parity.ethereum/keys/kovan/ (or /main/)

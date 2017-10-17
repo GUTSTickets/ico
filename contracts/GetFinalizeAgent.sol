@@ -29,7 +29,7 @@ contract GetFinalizeAgent is FinalizeAgent {
         token = _token;
         crowdsale = _crowdsale;
         if(address(crowdsale) == 0) {
-            throw;
+            revert();
         }
         
         require(_userGrowthMultisig != 0);
@@ -49,7 +49,7 @@ contract GetFinalizeAgent is FinalizeAgent {
     /** Called once by crowdsale finalize() if the sale was success. */
     function finalizeCrowdsale() {
         if(msg.sender != address(crowdsale)) {
-        throw;
+            revert();
         }
 
         // How many % of tokens the founders and others get

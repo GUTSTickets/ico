@@ -36,5 +36,22 @@ module.exports = function(deployer) {
             constants.multisig.STABILITYADDRESS,
             constants.multisig.BOUNTYADDRESS
         );
-    });
+    }).then(() => {
+        return GetCrowdsale.deployed();
+    }).then((crowdsale) => {
+        return crowdsale.setFinalizeAgent(
+            GetFinalizeAgent.address, {from: web3.eth.accounts[0]});
+    }).then(() => {
+        return GetToken.deployed();
+    }).then((token) => {
+        return Promise.all([
+            token.setMintAgent(GetCrowdsale.address, true, {from: web3.eth.accounts[0]}),
+            token.setMintAgent(GetFinalizeAgent.address, true, {from: web3.eth.accounts[0]}),
+            token.setReleaseAgent(GetFinalizeAgent.address, {from: web3.eth.accounts[0]})
+        ])
+    }).then(() => {
+        return GetWhitelist.deployed();
+    }).then((whitelist) => {
+        return whitelist.setWhitelister(GetPricingStrategy.address, true);
+    });;
 };

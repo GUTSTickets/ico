@@ -95,7 +95,8 @@ contract GetWhitelist is Ownable {
         WhitelisterChange(_whitelister, _isWhitelister);
     }
 
-    function setCaps(uint presaleCap, uint _tier1Cap, uint _tier2Cap, uint _tier3Cap, uint _tier4Cap) onlyOwner {
+    function setCaps(uint _presaleCap, uint _tier1Cap, uint _tier2Cap, uint _tier3Cap, uint _tier4Cap) onlyOwner {
+        presaleCap = _presaleCap;
         tier1Cap = _tier1Cap;
         tier2Cap = _tier2Cap;
         tier3Cap = _tier3Cap;
