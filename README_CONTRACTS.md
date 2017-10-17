@@ -7,6 +7,7 @@ GET ICO has 2 phases:
     - Only whitelisted accounts.
     - limited to a specific amount.
 - ICO:
+    - different contract from PreICO
     - Only whitelisted acounts
     - 4 different pricing tiers. Pricing is calculated depending on the amount that is already invested. The price of the token follows the pattern: 
         - Price is A between 0, x , x > 0
@@ -30,12 +31,14 @@ GetToken:
 
 GetCrowdsale:
 -------------
+- Only responsible for the sale, we use a different contract for the presale. The reason is that we want to have different address for the sale contract which will be shared through our app in a different time.
 - Tokenmarketnet MintedTokenCappedCrowdsale
 - Custom code:
-    - Since we have more specific whitelist structure, investInternal had to be overriden removing the use of earlyParticipantWhitelist. The account's right to invest is determined by a whitelist contract. 
     - Enable the fallback function. We want an account to get tokens if he transfers money to the GetCrowdsale.
     - Disable setEarlyParicipantWhitelist function (not needed)
     - Implement a timelock on the finalize() function. The crowdsale will be able to be finalized (Token becomes tradable and more tokens are minted) after some time (3 weeks).
+    - logPresaleResults: Moves the presale values to the crowdsale contract
+    - preallocate: The default function was not adding the preallocated amounts as presale amounts, so it is overriden.
 
 GetFinalizeAgent:
 -----------------
@@ -52,21 +55,22 @@ GetFinalizeAgent:
 GetPricingStrategy:
 -------------------
 - Tokenmarketnet EthTranchePricing
+- handles whitelist entries
 - Custom code:
     - calculatePrice: needs to check if a user is part of the whitelist.
     - calculatePrice: needs to update the user limits in the correct Tier (called Tranche in the contract).
-    - isPresalePurchase: needs to check in the whitelist contract.
+    - isPresalePurchase: always false, since we handle presale in a different contract.
 
 GetWhitelist:
 -------------
 - Custom contract
 - Ownable (zeppelin)
 - whitelisters: list of accounts that can add accounts to the whitelist
-- entries: whitelisted accounts
+- entries: whitelisted accounts. They start off with the caps defined 
 - WhitelistInfo: struct containing:
     - isWhitelisted bool
     - isEarly bool: for PreICO investors
-    - preICOAmount uint
+    - presaleAmount uint
     - tier1Amount: uint
     - tier2Amount: uint
     - tier3Amount: uint
@@ -75,12 +79,29 @@ GetWhitelist:
 - onlyWhitelister modifier: only whitelisters can perform this action
 - accept: onlyWhitelister modifier: add a new entry to the entries. Fails on existing one.
 - acceptBatched: onlyWhitelister modifier: add multiple entries to the entries
-- edit: onlyWhitelister modifier: change the amount of a specific account for a specific tier.
+- setCaps: onlyOwner modifier: change the tier caps
+- subtractAmount onlyWhitelister modifier: reduces the amount that an account can buy in a specific tiers
 
-Multisigs:
-----------
-- Crowdsale Multisig
-- Bounty Multisig
-- User Growth Multisig
-- Stability Fund Multisig
-- All Gnosis Multisig wallets
+
+GetPreCrowdsale:
+-------------
+- Only responsible for the presale, we use a different contract for the sale.
+- Tokenmarketnet MintedTokenCappedCrowdsale
+- Custom code:
+    - Enable the fallback function. We want an account to get tokens if he transfers money to the GetCrowdsale.
+    - Disable setEarlyParicipantWhitelist function (not needed)
+
+
+GetPreFinalizeAgent:
+-----------------
+- Tokenmarketnet FinalizeAgent
+- Custom code:
+    - updates Crowdsale with the amounts of GetPreCrowdsale
+
+
+GetPrePricingStrategy:
+-----------------
+- Tokenmarketnet FlatPricing
+- Custom code:
+    - checks whitelist
+    - updates the presaleAmount of entries.
