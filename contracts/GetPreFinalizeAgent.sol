@@ -40,4 +40,8 @@ contract GetPreFinalizeAgent is FinalizeAgent, Ownable {
             revert();
         }
     }
+    
+    function() payable {
+        revert();
+    }
 }

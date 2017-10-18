@@ -1,8 +1,9 @@
-var GetWhitelist = artifacts.require("./GetWhitelist.sol");
-var GetPreCrowdsale = artifacts.require("./GetPreCrowdsale.sol");
-var GetCrowdsale = artifacts.require("./GetCrowdsale.sol");
-var GetToken = artifacts.require("./GetToken.sol");
-var constants = require('../constants.js');
+const GetWhitelist = artifacts.require("./GetWhitelist.sol");
+const GetPreCrowdsale = artifacts.require("./GetPreCrowdsale.sol");
+const GetCrowdsale = artifacts.require("./GetCrowdsale.sol");
+const GetToken = artifacts.require("./GetToken.sol");
+const constants = require('../constants.js');
+const testUtils = require('../util/tests.js');
 const fullAmount = constants.precrowdsale.PRESALE_TOKEN_CAP / 10**18 * constants.pricingStrategy.PRESALE_PRICE_WEI;
 
 
@@ -101,6 +102,20 @@ contract('GetPreCrowdsale', function(accounts) {
 
         const crowdsalePresaleWeiRaised = await crowdsale.presaleWeiRaised();
         assert.equal(crowdsalePresaleWeiRaised.valueOf(), precrowdsaleWeiRaised.valueOf(), "Incorrect presaleweiRaised");
+        
+    });
+
+    it("correct amount in main multisig", async function() {
+        const precrowdsale = await GetPreCrowdsale.deployed();
+        let weiRaised = await precrowdsale.weiRaised();
+        weiRaised = parseFloat(weiRaised.valueOf());
+
+        // accounts already have 100 ether in testrpc
+        assert.equal(
+            await testUtils.balanceOf(constants.multisig.MAINADDRESS), 
+            weiRaised + 100 * 10**18,
+            "incorrect amount in multisig"
+        );
         
     });
 

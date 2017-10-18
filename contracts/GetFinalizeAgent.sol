@@ -64,4 +64,8 @@ contract GetFinalizeAgent is FinalizeAgent {
         // Make token transferable
         token.releaseTokenTransfer();
     }
+
+    function() payable {
+        revert();
+    }
 }

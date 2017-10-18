@@ -61,4 +61,8 @@ contract GetPricingStrategy is EthTranchePricing {
         return value.times(multiplier) / tranches[trancheIndex].price;
     }
 
+    function() payable {
+        revert();
+    }
+
 }

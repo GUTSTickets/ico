@@ -120,6 +120,6 @@ contract GetWhitelist is Ownable {
     }
 
     function() payable {
-        throw;
+        revert();
     }
 }
