@@ -185,7 +185,7 @@ contract('GetWhitelist', function(accounts) {
     });
     
     it("whitelister can add multiple addresses", async function(){
-        const n = 37; //37 is the max without out of gas exception
+        const n = 38; //38 is the max without out of gas exception
         var whitelist = await GetWhitelist.deployed();
         let randomAccounts = (new Array(n)).fill(true).map(() => {
             return VanityEth.getVanityWallet().address

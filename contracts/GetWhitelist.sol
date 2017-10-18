@@ -7,6 +7,7 @@ contract GetWhitelist is Ownable {
     using SafeMathLib for uint;
 
     event NewEntry(address whitelisted);
+    event NewBatch();
     event EdittedEntry(address whitelisted, uint tier);
     event WhitelisterChange(address whitelister, bool iswhitelister);
 
@@ -46,15 +47,30 @@ contract GetWhitelist is Ownable {
     }
 
     function acceptBatched(address[] _addresses, bool _isEarly) onlyWhitelister {
-        for (uint i=0; i<_addresses.length; i++) {
-            accept(_addresses[i], _isEarly);
+        // trying to save up some gas here
+        uint _presaleCap;
+        if (_isEarly) {
+            _presaleCap = presaleCap;
+        } else {
+            _presaleCap = 0;
         }
+        for (uint i=0; i<_addresses.length; i++) {
+            entries[_addresses[i]] = WhitelistInfo(
+                _presaleCap,
+                tier1Cap,
+                tier2Cap,
+                tier3Cap,
+                tier4Cap,
+                true
+            );
+        }
+        NewBatch();
     }
 
-    function accept(address _address, bool isEarly) onlyWhitelister {
+    function accept(address _address, bool _isEarly) onlyWhitelister {
         require(!entries[_address].isWhitelisted);
         uint _presaleCap;
-        if (isEarly) {
+        if (_isEarly) {
             _presaleCap = presaleCap;
         } else {
             _presaleCap = 0;
