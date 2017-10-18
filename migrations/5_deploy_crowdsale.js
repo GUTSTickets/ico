@@ -37,6 +37,10 @@ module.exports = function(deployer) {
             constants.multisig.BOUNTYADDRESS
         );
     }).then(() => {
+        return GetPricingStrategy.deployed();
+    }).then((pricingStrategy) => {
+        return pricingStrategy.setCrowdsale(GetCrowdsale.address);
+    }).then(() => {
         return GetCrowdsale.deployed();
     }).then((crowdsale) => {
         return crowdsale.setFinalizeAgent(

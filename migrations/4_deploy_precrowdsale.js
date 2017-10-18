@@ -24,6 +24,10 @@ module.exports = function(deployer) {
             constants.precrowdsale.PRESALE_TOKEN_CAP
         );
     }).then(() => {
+        return GetPrePricingStrategy.deployed();
+    }).then((pricingStrategy) => {
+        return pricingStrategy.setPrecrowdsale(GetPreCrowdsale.address);
+    }).then(() => {
         return deployer.deploy(
             GetPreFinalizeAgent,
             GetPreCrowdsale.address

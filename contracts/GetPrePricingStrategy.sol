@@ -8,15 +8,14 @@ pragma solidity ^0.4.15;
 
 import "../token_market_net/FlatPricing.sol";
 import "./GetWhitelist.sol";
-
+import "zeppelin-solidity/contracts/ownership/Ownable.sol";
 
 /// @dev Tranche based pricing with special support for pre-ico deals.
 ///      Implementing "first price" tranches, meaning, that if byers order is
 ///      covering more than one tranche, the price of the lowest tranche will apply
 ///      to the whole order.
-contract GetPrePricingStrategy is FlatPricing {
-    address presaleCrowdsale;
-    address saleCrowdsale;
+contract GetPrePricingStrategy is FlatPricing, Ownable {
+    address precrowdsale;
     GetWhitelist public whitelist;
     uint public presalePrice;
 
@@ -25,15 +24,24 @@ contract GetPrePricingStrategy is FlatPricing {
         whitelist = _whitelist;
     }
 
-    
-
     function isPresalePurchase(address purchaser) public constant returns (bool) {
         // we log sales in presale contract as normal sales.
         return false;
     }
 
+    function setPrecrowdsale(address _precrowdsale) onlyOwner {
+        require(_precrowdsale != 0);
+        precrowdsale = _precrowdsale;
+    }
+
+    function isSane(address crowdsale) public constant returns (bool) {
+        return precrowdsale != 0;
+    }
+
     /// @dev Calculate the current price for buy in amount.
     function calculatePrice(uint value, uint weiRaised, uint tokensSold, address msgSender, uint decimals) public constant returns (uint) {
+        // only precrowdsale can call this
+        require(msg.sender == precrowdsale);
         // 0 is the presale tier.
         whitelist.subtractAmount(msgSender, 0, value);
         return super.calculatePrice(value, weiRaised, tokensSold, msgSender, decimals);

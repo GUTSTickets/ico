@@ -16,6 +16,7 @@ import "./GetWhitelist.sol";
 ///      to the whole order.
 contract GetPricingStrategy is EthTranchePricing {
     GetWhitelist public whitelist;
+    address crowdsale;
 
     function GetPricingStrategy(GetWhitelist _whitelist, uint[] _tranches) EthTranchePricing(_tranches) {
         assert(_whitelist.isGetWhiteList());
@@ -24,6 +25,15 @@ contract GetPricingStrategy is EthTranchePricing {
 
     function isPresalePurchase(address purchaser) public constant returns (bool) {
         return false;
+    }
+
+    function setCrowdsale(address _crowdsale) onlyOwner {
+        require(_crowdsale != 0);
+        crowdsale = _crowdsale;
+    }
+
+    function isSane(address _crowdsale) public constant returns (bool) {
+        return crowdsale == _crowdsale;
     }
 
     // needed to update the correct tier in whitelist
@@ -40,6 +50,7 @@ contract GetPricingStrategy is EthTranchePricing {
 
     /// @dev Calculate the current price for buy in amount.
     function calculatePrice(uint value, uint weiRaised, uint tokensSold, address msgSender, uint decimals) public constant returns (uint) {
+        require(msg.sender == crowdsale);
         uint amount;
         bool isEarly;
         bool isWhitelisted;
